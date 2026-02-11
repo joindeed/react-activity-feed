@@ -1,35 +1,39 @@
 import React from 'react';
 import _truncate from 'lodash/truncate';
 import * as linkify from 'linkifyjs';
-// @ts-expect-error
-import linkifyMention from 'linkifyjs/plugins/mention';
+import type { PluginArg } from 'linkifyjs';
+import { createTokenClass, registerPlugin, init } from 'linkifyjs';
+import 'linkify-plugin-mention';
 
-// 'linkifyjs/plugins/hashtag';
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function linkifyHashtag(linkify: any) {
-  const TT = linkify.scanner.TOKENS; // Text tokens
-  const MultiToken = linkify.parser.TOKENS.Base; // Base Multi token class
-  const S_START = linkify.parser.start;
-  function HASHTAG(value: unknown) {
-    // @ts-expect-error
-    this.v = value;
-  }
-  linkify.inherits(MultiToken, HASHTAG, { type: 'hashtag', isLink: true });
-  const S_HASH = S_START.jump(TT.POUND);
-  const S_HASHTAG = new linkify.parser.State(HASHTAG);
+// Initialize linkify
+init();
 
-  S_HASH.on(TT.DOMAIN, S_HASHTAG);
-  S_HASH.on(TT.UNDERSCORE, S_HASHTAG);
-  S_HASH.on(TT.TLD, S_HASHTAG);
+// Register hashtag plugin for linkifyjs 4.x
+const HashtagToken = createTokenClass('hashtag', {
+  isLink: true,
+  toHref() {
+    return this.toString();
+  },
+});
 
-  // following lines are the diff from original implemention
-  // add support for _ in hashtags
-  S_HASH.on(TT.LOCALHOST, S_HASHTAG);
-  S_HASHTAG.on(TT.UNDERSCORE, S_HASH);
-}
+registerPlugin('hashtag', ({ scanner, parser }: PluginArg) => {
+  const { POUND, UNDERSCORE, LOCALHOST } = scanner.tokens as Record<string, string>;
+  const { domain } = scanner.tokens.groups;
 
-linkifyMention(linkify);
-linkifyHashtag(linkify);
+  // #
+  const Hash = parser.start.tt(POUND);
+
+  // Valid hashtag
+  const Hashtag = Hash.tt(UNDERSCORE, HashtagToken);
+  Hash.ta(domain, Hashtag);
+
+  // Continue hashtag
+  Hashtag.ta(domain, Hashtag);
+  Hashtag.tt(UNDERSCORE, Hashtag);
+
+  // Support for _ in hashtags (like original implementation)
+  Hashtag.tt(LOCALHOST, Hashtag);
+});
 
 type ClickCallback = (word: string) => void;
 type Word = string | JSX.Element;
