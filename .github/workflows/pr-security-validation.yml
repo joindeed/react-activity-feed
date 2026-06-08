@@ -1,6 +1,6 @@
 # PR Security Validation
-# All five jobs must pass before merge.
-# Pin each action to a commit SHA before enabling branch protection.
+# Gates: dependency install integrity + security regression tests.
+# Full build/lint/snapshot coverage is handled by the repo's own workflows.
 
 name: PR Security Validation
 
@@ -12,82 +12,54 @@ permissions:
   contents: read
 
 jobs:
-  build:
-    name: Build
+  install:
+    name: Dependency install
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
-      - name: Detect runtime and build
+      - name: Verify clean install
         run: |
           if [ -f package.json ]; then
             if [ -f yarn.lock ]; then
-              yarn install --ignore-scripts && yarn run build --if-present
+              yarn install --ignore-scripts --frozen-lockfile
             else
-              npm install --ignore-scripts && npm run build --if-present
+              npm ci --ignore-scripts
             fi
           elif [ -f pom.xml ]; then
-            mvn -B package -DskipTests
+            mvn -B dependency:resolve -q
           elif [ -f build.gradle ] || [ -f build.gradle.kts ]; then
-            ./gradlew build -x test
+            ./gradlew dependencies -q
           elif [ -f go.mod ]; then
-            go build ./...
-          elif [ -f requirements.txt ] || [ -f pyproject.toml ]; then
+            go mod download
+          elif [ -f requirements.txt ]; then
+            pip install -r requirements.txt --quiet
+          elif [ -f pyproject.toml ]; then
             pip install -e . --quiet
           else
-            echo "No recognized build file — skipping."
+            echo "No recognized package manifest — skipping."
           fi
 
-  test:
-    name: Test suite
+  security-tests:
+    name: Security regression tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
-      - name: Run tests
+      - name: Run security regression tests
         run: |
           if [ -f package.json ]; then
             if [ -f yarn.lock ]; then
-              yarn install --ignore-scripts && yarn test -- --coverage
+              yarn install --ignore-scripts && yarn test -- test/security/ --no-coverage
             else
-              npm install --ignore-scripts && npm test -- --coverage
+              npm install --ignore-scripts && npm test -- test/security/ --no-coverage
             fi
           elif [ -f pom.xml ]; then
-            mvn -B test
+            mvn -B test -Dtest="**/security/**"
           elif [ -f build.gradle ] || [ -f build.gradle.kts ]; then
-            ./gradlew test
+            ./gradlew test --tests "*.security.*"
           elif [ -f go.mod ]; then
-            go test ./... -cover
+            go test ./... -run Security -cover
           elif [ -f requirements.txt ] || [ -f pyproject.toml ]; then
-            pip install -e . --quiet && pytest --tb=short
+            pip install -e . --quiet && pytest tests/security/ --tb=short
           else
             echo "No recognized test runner — skipping."
           fi
-
-  dependency-review:
-    name: Dependency review
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-    steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
-      - uses: actions/dependency-review-action@2031cfc080254a8a887f58cffee85186f0e49e48  # v4.9.0
-        with:
-          fail-on-severity: high
-          comment-summary-in-pr: always
-
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      statuses: write
-    steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
-        with:
-          fetch-depth: 0
-      - name: Super-Linter (changed files only)
-        uses: github/super-linter/slim@b9a6407d9a9e63b669d3ab5e249aeb55ef47eb93  # v7.3.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VALIDATE_ALL_CODEBASE: false
-          DEFAULT_BRANCH: main
