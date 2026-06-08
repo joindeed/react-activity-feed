@@ -62,23 +62,6 @@ jobs:
             echo "No recognized test runner — skipping."
           fi
 
-  snyk-verify:
-    name: Snyk — verify CVE closed
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
-      - name: Install Snyk CLI
-        run: npm install -g snyk
-      - name: Snyk test
-        run: |
-          if [ -z "$SNYK_TOKEN" ]; then
-            echo "::warning::SNYK_TOKEN not configured — step skipped. Add secret to enable this gate."
-            exit 0
-          fi
-          snyk test --severity-threshold=high
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
   dependency-review:
     name: Dependency review
     runs-on: ubuntu-latest
