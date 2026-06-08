@@ -24,3 +24,12 @@ lib
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Claude Code run state — do not commit
+.claude/run-state.json
+
+# Security scan artifacts — do not commit
+.security/
+
+# Auto-generated PR body — do not commit
+.github/PR_BODY.md

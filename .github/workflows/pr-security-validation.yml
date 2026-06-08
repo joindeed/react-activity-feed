@@ -1,0 +1,97 @@
+# PR Security Validation
+# All five jobs must pass before merge.
+# Pin each action to a commit SHA before enabling branch protection.
+
+name: PR Security Validation
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - name: Detect runtime and build
+        run: |
+          if [ -f package.json ]; then
+            npm ci && npm run build --if-present
+          elif [ -f pom.xml ]; then
+            mvn -B package -DskipTests
+          elif [ -f build.gradle ] || [ -f build.gradle.kts ]; then
+            ./gradlew build -x test
+          elif [ -f go.mod ]; then
+            go build ./...
+          elif [ -f requirements.txt ] || [ -f pyproject.toml ]; then
+            pip install -e . --quiet
+          else
+            echo "No recognized build file — skipping."
+          fi
+
+  test:
+    name: Test suite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - name: Run tests
+        run: |
+          if [ -f package.json ]; then
+            npm ci && npm test -- --coverage
+          elif [ -f pom.xml ]; then
+            mvn -B test
+          elif [ -f build.gradle ] || [ -f build.gradle.kts ]; then
+            ./gradlew test
+          elif [ -f go.mod ]; then
+            go test ./... -cover
+          elif [ -f requirements.txt ] || [ -f pyproject.toml ]; then
+            pip install -e . --quiet && pytest --tb=short
+          else
+            echo "No recognized test runner — skipping."
+          fi
+
+  snyk-verify:
+    name: Snyk — verify CVE closed
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - name: Install Snyk CLI
+        run: npm install -g snyk
+      - name: Snyk test
+        run: snyk test --severity-threshold=high
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+  dependency-review:
+    name: Dependency review
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - uses: actions/dependency-review-action@38b0b2e3cba4d52ad8e6fbd3036a01ec24d76d05  # v4.6.0
+        with:
+          fail-on-severity: high
+          comment-summary-in-pr: always
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      statuses: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          fetch-depth: 0
+      - name: Super-Linter (changed files only)
+        uses: github/super-linter/slim@b9a6407d9a9e63b669d3ab5e249aeb55ef47eb93  # v7.3.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: main
