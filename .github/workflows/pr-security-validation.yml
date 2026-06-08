@@ -70,8 +70,12 @@ jobs:
       - name: Install Snyk CLI
         run: npm install -g snyk
       - name: Snyk test
-        run: snyk test --severity-threshold=high
-        continue-on-error: true  # SNYK_TOKEN not yet configured in joindeed org; CVE closure verified via Snyk MCP during PR authoring. Remove once secret is added.
+        run: |
+          if [ -z "$SNYK_TOKEN" ]; then
+            echo "::warning::SNYK_TOKEN not configured — step skipped. Add secret to enable this gate."
+            exit 0
+          fi
+          snyk test --severity-threshold=high
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
