@@ -2755,10 +2755,10 @@ __metadata:
     react-file-utils: "npm:^1.1.7"
     react-image-lightbox: "npm:^5.1.1"
     react-test-renderer: "npm:^17.0.2"
-    rollup: "npm:^2.56.3"
-    rollup-plugin-node-globals: "npm:^1.4.0"
-    rollup-plugin-peer-deps-external: "npm:^2.2.4"
-    rollup-plugin-postcss: "npm:^4.0.1"
+    rollup: "npm:^2"
+    rollup-plugin-node-globals: "npm:^1"
+    rollup-plugin-peer-deps-external: "npm:^2"
+    rollup-plugin-postcss: "npm:^4"
     sass: "npm:^1.40.1"
     size-limit: "npm:^4.10.2"
     stream-analytics: "npm:^3.4.2"
@@ -22026,7 +22026,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup-plugin-node-globals@npm:^1.4.0":
+"rollup-plugin-node-globals@npm:^1":
   version: 1.4.0
   resolution: "rollup-plugin-node-globals@npm:1.4.0"
   dependencies:
@@ -22040,7 +22040,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup-plugin-peer-deps-external@npm:^2.2.4":
+"rollup-plugin-peer-deps-external@npm:^2":
   version: 2.2.4
   resolution: "rollup-plugin-peer-deps-external@npm:2.2.4"
   peerDependencies:
@@ -22049,9 +22049,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup-plugin-postcss@npm:^4.0.1":
-  version: 4.0.1
-  resolution: "rollup-plugin-postcss@npm:4.0.1"
+"rollup-plugin-postcss@npm:^4":
+  version: 4.0.2
+  resolution: "rollup-plugin-postcss@npm:4.0.2"
   dependencies:
     chalk: "npm:^4.1.0"
     concat-with-sourcemaps: "npm:^1.1.0"
@@ -22068,7 +22068,7 @@ __metadata:
     style-inject: "npm:^0.3.0"
   peerDependencies:
     postcss: 8.x
-  checksum: 10c0/3c19b0dc51f238d7ac18185f13064e3e9d3764dddfafc0b34a5639e0917fe14237929342a5cc09e06d8705736208598ce83c5b8d9cc192652cbdf19087a55b99
+  checksum: 10c0/c35fde734c2985a0302ce06a8444c2d4cfeba8ac3d9776b48546dc4d819f92c679c120d6ab28ffd09b51056fc7797559b36c29aabb9deaf50f872587d473821e
   languageName: node
   linkType: hard
 
@@ -22081,9 +22081,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup@npm:^2.56.3":
-  version: 2.56.3
-  resolution: "rollup@npm:2.56.3"
+"rollup@npm:^2":
+  version: 2.80.0
+  resolution: "rollup@npm:2.80.0"
   dependencies:
     fsevents: "npm:~2.3.2"
   dependenciesMeta:
@@ -22091,7 +22091,7 @@ __metadata:
       optional: true
   bin:
     rollup: dist/bin/rollup
-  checksum: 10c0/6570e8f521014b943ea5910aee8406ee6826948c6f214272b809342fcfb1c7f4baec2e4bbcf8c182f29d1913bd088880a99aea16d1001e290213ae16505e3346
+  checksum: 10c0/48ad7b79a4ef9332cf90692d28c05f904132820964f012941372ec4f31c18635e1b7909823058964fb2b216154713bfbe82ec00920d71b15f3fe13bb9df3eac8
   languageName: node
   linkType: hard
 
