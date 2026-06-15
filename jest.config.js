@@ -1,8 +1,14 @@
 module.exports = {
   verbose: true,
   maxConcurrency: 15,
+  testEnvironment: 'jsdom',
+  // Preserve the pre-jest-29 snapshot serializer so existing snapshots stay valid
+  // (jest 29 changed the defaults to { escapeString: false, printBasicPrototype: false }).
+  snapshotFormat: {
+    escapeString: true,
+    printBasicPrototype: true,
+  },
   transformIgnorePatterns: [],
-  testPathIgnorePatterns: ['/node_modules/', '/examples/', '/example/', '__snapshots__'],
   transform: {
     '.(js|jsx)$': 'babel-jest',
     '.(ts|tsx)$': 'ts-jest',

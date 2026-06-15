@@ -26,7 +26,7 @@ import {
   EnrichedReactionAPIResponse,
 } from 'getstream';
 
-import { generateRandomId } from '../utils';
+import { fromJSAs, generateRandomId, getInAs, getInToJS, typedUpdater } from '../utils';
 import { ErrorHandler } from '../utils/errors';
 import { DefaultUT, DefaultAT } from './StreamApp';
 import { FeedProps } from './Feed';
@@ -248,14 +248,23 @@ export class FeedManager<
       let { activities } = prevState;
       const { reactionIdToPaths } = prevState;
       for (const path of this.getActivityPaths(activity)) {
-        this.removeFoundReactionIdPaths(activities.getIn(path).toJS(), reactionIdToPaths, path);
+        this.removeFoundReactionIdPaths(getInToJS<EnrichedReaction>(activities, path), reactionIdToPaths, path);
 
         activities = activities
-          .updateIn([...path, 'reaction_counts', kind], (v = 0) => v + 1)
-          .updateIn([...path, 'own_reactions', kind], (v = immutable.List()) => v.unshift(enrichedReaction))
-          .updateIn([...path, 'latest_reactions', kind], (v = immutable.List()) => v.unshift(enrichedReaction));
+          .updateIn(
+            [...path, 'reaction_counts', kind],
+            typedUpdater<number>((v) => v + 1, 0),
+          )
+          .updateIn(
+            [...path, 'own_reactions', kind],
+            typedUpdater<immutable.List<unknown>>((v) => v.unshift(enrichedReaction), immutable.List()),
+          )
+          .updateIn(
+            [...path, 'latest_reactions', kind],
+            typedUpdater<immutable.List<unknown>>((v) => v.unshift(enrichedReaction), immutable.List()),
+          );
 
-        this.addFoundReactionIdPaths(activities.getIn(path).toJS(), reactionIdToPaths, path);
+        this.addFoundReactionIdPaths(getInToJS<EnrichedReaction>(activities, path), reactionIdToPaths, path);
       }
 
       return { activities, reactionIdToPaths };
@@ -285,18 +294,29 @@ export class FeedManager<
       let { activities } = prevState;
       const { reactionIdToPaths } = prevState;
       for (const path of this.getActivityPaths(activity)) {
-        this.removeFoundReactionIdPaths(activities.getIn(path).toJS(), reactionIdToPaths, path);
+        this.removeFoundReactionIdPaths(getInToJS<EnrichedReaction>(activities, path), reactionIdToPaths, path);
 
         activities = activities
-          .updateIn([...path, 'reaction_counts', kind], (v = 0) => v - 1)
-          .updateIn([...path, 'own_reactions', kind], (v = immutable.List()) =>
-            v.remove(v.findIndex((r: CU) => r.get('id') === id)),
+          .updateIn(
+            [...path, 'reaction_counts', kind],
+            typedUpdater<number>((v) => v - 1, 0),
           )
-          .updateIn([...path, 'latest_reactions', kind], (v = immutable.List()) =>
-            v.remove(v.findIndex((r: CU) => r.get('id') === id)),
+          .updateIn(
+            [...path, 'own_reactions', kind],
+            typedUpdater<immutable.List<CU>>(
+              (v) => v.remove(v.findIndex((r: CU) => r.get('id') === id)),
+              immutable.List<CU>(),
+            ),
+          )
+          .updateIn(
+            [...path, 'latest_reactions', kind],
+            typedUpdater<immutable.List<CU>>(
+              (v) => v.remove(v.findIndex((r: CU) => r.get('id') === id)),
+              immutable.List<CU>(),
+            ),
           );
 
-        this.addFoundReactionIdPaths(activities.getIn(path).toJS(), reactionIdToPaths, path);
+        this.addFoundReactionIdPaths(getInToJS<EnrichedReaction>(activities, path), reactionIdToPaths, path);
       }
 
       return { activities, reactionIdToPaths };
@@ -320,7 +340,8 @@ export class FeedManager<
     togglingReactions[activity.id] = true;
     this.state.reactionsBeingToggled[kind] = togglingReactions;
 
-    const currentReactions = this.state.activities.getIn(
+    const currentReactions = getInAs<immutable.List<immutable.Record<EnrichedReaction<RT, CRT, UT>>>>(
+      this.state.activities,
       [...this.getActivityPaths(activity)[0], 'own_reactions', kind],
       immutable.List(),
     );
@@ -368,9 +389,18 @@ export class FeedManager<
       let { activities } = prevState;
       for (const path of this.getReactionPaths(reaction)) {
         activities = activities
-          .updateIn([...path, 'children_counts', kind], (v = 0) => v + 1)
-          .updateIn([...path, 'own_children', kind], (v = immutable.List()) => v.unshift(enrichedReaction))
-          .updateIn([...path, 'latest_children', kind], (v = immutable.List()) => v.unshift(enrichedReaction));
+          .updateIn(
+            [...path, 'children_counts', kind],
+            typedUpdater<number>((v) => v + 1, 0),
+          )
+          .updateIn(
+            [...path, 'own_children', kind],
+            typedUpdater<immutable.List<unknown>>((v) => v.unshift(enrichedReaction), immutable.List()),
+          )
+          .updateIn(
+            [...path, 'latest_children', kind],
+            typedUpdater<immutable.List<unknown>>((v) => v.unshift(enrichedReaction), immutable.List()),
+          );
       }
 
       return { activities };
@@ -402,12 +432,23 @@ export class FeedManager<
       let { activities } = prevState;
       for (const path of this.getReactionPaths(reaction)) {
         activities = activities
-          .updateIn([...path, 'children_counts', kind], (v = 0) => v - 1)
-          .updateIn([...path, 'own_children', kind], (v = immutable.List()) =>
-            v.remove(v.findIndex((r: CU) => r.get('id') === id)),
+          .updateIn(
+            [...path, 'children_counts', kind],
+            typedUpdater<number>((v) => v - 1, 0),
           )
-          .updateIn([...path, 'latest_children', kind], (v = immutable.List()) =>
-            v.remove(v.findIndex((r: CU) => r.get('id') === id)),
+          .updateIn(
+            [...path, 'own_children', kind],
+            typedUpdater<immutable.List<CU>>(
+              (v) => v.remove(v.findIndex((r: CU) => r.get('id') === id)),
+              immutable.List<CU>(),
+            ),
+          )
+          .updateIn(
+            [...path, 'latest_children', kind],
+            typedUpdater<immutable.List<CU>>(
+              (v) => v.remove(v.findIndex((r: CU) => r.get('id') === id)),
+              immutable.List<CU>(),
+            ),
           );
       }
 
@@ -428,7 +469,8 @@ export class FeedManager<
     togglingReactions[reaction.id] = true;
     this.state.childReactionsBeingToggled[kind] = togglingReactions;
 
-    const currentReactions = this.state.activities.getIn(
+    const currentReactions = getInAs<immutable.List<immutable.Record<EnrichedReaction<RT, CRT, UT>>>>(
+      this.state.activities,
       [...this.getReactionPaths(reaction)[0], 'own_children', kind],
       immutable.List(),
     );
@@ -451,17 +493,17 @@ export class FeedManager<
         // the list
         const groupArrayPath = path.slice(0, -1);
         activityIdToPath = this.removeFoundActivityIdPath(
-          activities.getIn(groupArrayPath).toJS(),
+          getInToJS<ResponseResult[]>(activities, groupArrayPath),
           activityIdToPath,
           groupArrayPath,
         );
         activityIdToPaths = this.removeFoundActivityIdPaths(
-          activities.getIn(groupArrayPath).toJS(),
+          getInToJS<ResponseResult[]>(activities, groupArrayPath),
           activityIdToPaths,
           groupArrayPath,
         );
         reactionIdToPaths = this.removeFoundReactionIdPaths(
-          activities.getIn(groupArrayPath).toJS(),
+          getInToJS<EnrichedReaction[]>(activities, groupArrayPath),
           reactionIdToPaths,
           groupArrayPath,
         );
@@ -481,23 +523,23 @@ export class FeedManager<
       activities = activities.removeIn(path);
       if (path.length > 1) {
         const groupArrayPath = path.slice(0, -1);
-        if (activities.getIn(groupArrayPath).size === 0) {
+        if (getInAs<immutable.List<unknown>>(activities, groupArrayPath).size === 0) {
           outerId = path[0];
         } else {
           outerId = null;
         }
         activityIdToPath = this.addFoundActivityIdPath(
-          activities.getIn(groupArrayPath).toJS(),
+          getInToJS<ResponseResult[]>(activities, groupArrayPath),
           activityIdToPath,
           groupArrayPath,
         );
         activityIdToPaths = this.addFoundActivityIdPaths(
-          activities.getIn(groupArrayPath).toJS(),
+          getInToJS<ResponseResult[]>(activities, groupArrayPath),
           activityIdToPaths,
           groupArrayPath,
         );
         reactionIdToPaths = this.addFoundReactionIdPaths(
-          activities.getIn(groupArrayPath).toJS(),
+          getInToJS<EnrichedReaction[]>(activities, groupArrayPath),
           reactionIdToPaths,
           groupArrayPath,
         );
@@ -611,7 +653,7 @@ export class FeedManager<
   responseToActivityMap = (
     response: FeedAPIResponse<UT, AT, CT, RT, CRT>,
   ): immutable.Map<string, immutable.Record<ResponseResult<UT, AT, CT, RT, CRT>>> =>
-    immutable.fromJS(
+    fromJSAs<immutable.Map<string, immutable.Record<ResponseResult<UT, AT, CT, RT, CRT>>>>(
       response.results.reduce((map: Record<string, ResponseResult>, a: ResponseResult) => {
         map[a.id] = a;
         return map;
@@ -1184,10 +1226,13 @@ export class FeedManager<
     const nextUrlPath = [...activityPath, orderPrefix + '_reactions_extra', kind, 'next'];
     const refreshingPath = [...activityPath, orderPrefix + '_reactions_extra', kind, 'refreshing'];
 
-    const reactions_extra = this.state.activities.getIn([...activityPath, orderPrefix + '_reactions_extra']);
+    const reactions_extra = getInAs<CU | undefined>(this.state.activities, [
+      ...activityPath,
+      orderPrefix + '_reactions_extra',
+    ]);
     let nextUrl = 'https://api.stream-io-api.com/';
     if (reactions_extra) {
-      nextUrl = reactions_extra.getIn([kind, 'next'], '');
+      nextUrl = getInAs<string>(reactions_extra, [kind, 'next'], '');
     } else if (oldestToNewest) {
       // If it's the first request and oldest to newest make sure
       // order is reversed by this trick with a non existant id.
@@ -1220,12 +1265,15 @@ export class FeedManager<
       activities: prevState.activities
         .setIn(refreshingPath, false)
         .setIn(nextUrlPath, response.next)
-        .updateIn(latestReactionsPath, (v = immutable.List()) => v.concat(immutable.fromJS(response.results))),
+        .updateIn(
+          latestReactionsPath,
+          typedUpdater<immutable.List<unknown>>((v) => v.concat(immutable.fromJS(response.results)), immutable.List()),
+        ),
       reactionIdToPaths: this.reactionResponseToReactionIdToPaths(
         response,
         prevState.reactionIdToPaths,
         latestReactionsPath,
-        prevState.activities.getIn(latestReactionsPath, immutable.List()).toJS().length,
+        getInToJS<unknown[]>(prevState.activities, latestReactionsPath, immutable.List()).length,
       ),
     }));
   };
