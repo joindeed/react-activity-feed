@@ -5,9 +5,6 @@ import type { PluginArg } from 'linkifyjs';
 import { createTokenClass, registerPlugin, init } from 'linkifyjs';
 import 'linkify-plugin-mention';
 
-// Initialize linkify
-init();
-
 // Register hashtag plugin for linkifyjs 4.x
 const HashtagToken = createTokenClass('hashtag', {
   isLink: true,
@@ -34,6 +31,10 @@ registerPlugin('hashtag', ({ scanner, parser }: PluginArg) => {
   // Support for _ in hashtags (like original implementation)
   Hashtag.tt(LOCALHOST, Hashtag);
 });
+
+// Initialize linkify AFTER all plugins (mention + hashtag) are registered.
+// linkify ignores any plugin registered after the first init(), so this must run last.
+init();
 
 type ClickCallback = (word: string) => void;
 type Word = string | JSX.Element;
