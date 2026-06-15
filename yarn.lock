@@ -24589,18 +24589,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tough-cookie@npm:*":
-  version: 4.0.0
-  resolution: "tough-cookie@npm:4.0.0"
-  dependencies:
-    psl: "npm:^1.1.33"
-    punycode: "npm:^2.1.1"
-    universalify: "npm:^0.1.2"
-  checksum: 10c0/8ecd1f1ff1fa1d2c04f5e8533ae61d9b43062279aa62d7daf52a16fd99643fa569ae38464b6ae3f3fe1aa2184cee1539ff2066120eb95b9ac9684e8047b0ea3c
-  languageName: node
-  linkType: hard
-
-"tough-cookie@npm:^4.1.2":
+"tough-cookie@npm:*, tough-cookie@npm:^4.1.2":
   version: 4.1.4
   resolution: "tough-cookie@npm:4.1.4"
   dependencies:
@@ -25518,7 +25507,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"universalify@npm:^0.1.0, universalify@npm:^0.1.2":
+"universalify@npm:^0.1.0":
   version: 0.1.2
   resolution: "universalify@npm:0.1.2"
   checksum: 10c0/e70e0339f6b36f34c9816f6bf9662372bd241714dc77508d231d08386d94f2c4aa1ba1318614f92015f40d45aae1b9075cd30bd490efbe39387b60a76ca3f045
