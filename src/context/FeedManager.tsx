@@ -612,7 +612,6 @@ export class FeedManager<
     response: FeedAPIResponse<UT, AT, CT, RT, CRT>,
   ): immutable.Map<string, immutable.Record<ResponseResult<UT, AT, CT, RT, CRT>>> =>
     immutable.fromJS(
-      // @ts-expect-error
       response.results.reduce((map: Record<string, ResponseResult>, a: ResponseResult) => {
         map[a.id] = a;
         return map;
