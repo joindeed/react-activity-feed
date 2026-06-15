@@ -194,3 +194,4 @@ export type PropsWithElementAttributes<T extends UR = UR, E extends HTMLElement 
 
 export * from './textRenderer';
 export * from './smartRender';
+export * from './immutable';

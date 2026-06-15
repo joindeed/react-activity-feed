@@ -4,7 +4,9 @@ import { UR, EnrichedReaction } from 'getstream';
 
 import { LoadMorePaginator, LoadMorePaginatorProps } from './LoadMorePaginator';
 import { useFeedContext, DefaultUT, DefaultAT } from '../context';
-import { smartRender, ElementOrComponentOrLiteralType } from '../utils';
+import { smartRender, ElementOrComponentOrLiteralType, getInAs } from '../utils';
+
+type CU = immutable.Collection<unknown, unknown>;
 
 export type ReactionListType<UT extends DefaultUT = DefaultUT, RT extends UR = UR, CRT extends UR = UR> = {
   /** The ID of the activity for which these reactions are */
@@ -48,13 +50,15 @@ export const ReactionList = <
 
   const activityPath = defaultActivityPath || feed.getActivityPath(activityId);
   const orderPrefix = oldestToNewest ? 'oldest' : 'latest';
-  const reactionsExtra = feed.activities.getIn([...activityPath, orderPrefix + '_reactions_extra']);
+  const reactionsExtra = getInAs<CU | undefined>(feed.activities, [...activityPath, orderPrefix + '_reactions_extra']);
   const hasNextPage = reactionsExtra ? !!reactionsExtra.getIn([reactionKind, 'next'], '') : true;
-  let reactions = feed.activities.getIn(
+  let reactions = getInAs<immutable.List<immutable.Record<EnrichedReaction>>>(
+    feed.activities,
     [...activityPath, orderPrefix + '_reactions', reactionKind],
     immutable.List(),
-  ) as immutable.List<immutable.Record<EnrichedReaction>>;
-  const refreshing = feed.activities.getIn(
+  );
+  const refreshing = getInAs<boolean>(
+    feed.activities,
     [...activityPath, orderPrefix + '_reactions_extra', reactionKind, 'refreshing'],
     false,
   );
@@ -80,7 +84,7 @@ export const ReactionList = <
         reverse: reverseOrder,
         children: reactions.map((reaction) =>
           smartRender(Reaction, {
-            reaction: reaction.toJS(),
+            reaction: (reaction.toJS() as unknown) as EnrichedReaction<RT, CRT, UT>,
             key: reaction.get('id'),
           }),
         ),
