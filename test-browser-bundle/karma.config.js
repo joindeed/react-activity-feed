@@ -1,7 +1,7 @@
 module.exports = function (config) {
   config.set({
     frameworks: ['mocha'],
-    browsers: ['ChromeHeadless'],
+    browsers: ['ChromiumHeadless'],
     files: [
       '../node_modules/chai/chai.js',
       '../node_modules/react/umd/react.development.js',
