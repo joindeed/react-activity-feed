@@ -19,7 +19,7 @@
     "dist"
   ],
   "engines": {
-    "node": "12 || >=14"
+    "node": ">=20"
   },
   "scripts": {
     "test": "jest",
