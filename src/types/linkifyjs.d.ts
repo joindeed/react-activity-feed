@@ -1,41 +1,43 @@
 // Type declarations for linkifyjs 4.x
 declare module 'linkifyjs' {
   export interface Token {
+    e: number;
+    s: number;
     t: string;
     v: string;
-    s: number;
-    e: number;
   }
 
   export interface MultiToken {
-    t: string;
-    v: string;
     isLink: boolean;
-    toString(): string;
+    t: string;
     toHref(scheme?: string): string;
-    toObject(protocol?: string): {
+    toObject(
+      protocol?: string,
+    ): {
+      end: number;
+      href: string;
+      isLink: boolean;
+      start: number;
       type: string;
       value: string;
-      isLink: boolean;
-      href: string;
-      start: number;
-      end: number;
     };
+    toString(): string;
+    v: string;
   }
 
   export interface State<T> {
     t: T | null;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    tt(token: string, result?: any): State<T>;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ta(tokens: string[], result?: any): State<T>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    tt(token: string, result?: any): State<T>;
   }
 
   export interface ScannerInit {
     start: State<string>;
     tokens: {
-      groups: { [collection: string]: string[] };
       [key: string]: unknown;
+      groups: { [collection: string]: string[] };
     };
   }
 
@@ -45,8 +47,8 @@ declare module 'linkifyjs' {
   }
 
   export interface PluginArg {
-    scanner: ScannerInit;
     parser: ParserInit;
+    scanner: ScannerInit;
   }
 
   export type Plugin = (arg: PluginArg) => void;
@@ -57,13 +59,17 @@ declare module 'linkifyjs' {
   }
 
   export function init(): void;
-  export function find(str: string, type?: string | null, options?: unknown): Array<{
+  export function find(
+    str: string,
+    type?: string | null,
+    options?: unknown,
+  ): Array<{
+    end: number;
+    href: string;
+    isLink: boolean;
+    start: number;
     type: string;
     value: string;
-    isLink: boolean;
-    href: string;
-    start: number;
-    end: number;
   }>;
   export function test(str: string, type?: string | null): boolean;
   export function tokenize(str: string): MultiToken[];
