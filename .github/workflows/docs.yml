@@ -14,10 +14,10 @@ jobs:
   build-docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-node
       - name: Cache .docz folder
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ./.docz
           key: docz-${{ matrix.node }}-gatsby-v1-${{ github.run_id }}
