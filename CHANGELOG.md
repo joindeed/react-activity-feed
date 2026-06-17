@@ -5,6 +5,49 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+Security-hardening and tooling-modernization work from the `securitize` branch. These
+changes clear the outstanding `yarn npm audit` findings and bring the build, CI, and
+toolchain up to date without changing the public component API.
+
+### Fix
+
+- `linkify`'s hashtag linking is restored. `init()` is now called _after_ both the
+  `mention` and `hashtag` plugins are registered, since `linkifyjs` 4.x ignores any
+  plugin registered after the first `init()` call.
+
+### Security
+
+- Suppress `CVE-2022-24785` and `CVE-2022-31129` by pulling the latest `moment@^2.30.1`.
+- Suppress `GHSA-wf6x-7x77-mvgw` by pulling the latest `immutable@^4.3.8` (adds typed
+  `getIn`/`updateIn`/`fromJS` helpers in `src/utils/immutable.ts` for immutable v4).
+- Suppress `GHSA-r5fr-rjxr-66jc`, `GHSA-f23m-r3pf-42rh`, and `GHSA-xxjr-mmjv-4gpg` by
+  pulling the latest `lodash@^4.18.1`.
+- Suppress `GHSA-7fh5-64p2-3v2j` and `GHSA-qx2v-qp2m-jg93` by pulling the latest
+  `postcss@^8.5.15`.
+- Suppress `GHSA-gcx4-mw62-g8wm` and `GHSA-mw96-cpmx-2vgc` by pulling the latest
+  `rollup@^2.80.0`.
+- Suppress `GHSA-rc3x-jf5g-xvc5` and `GHSA-7x7c-qm48-pq9c` by pulling the latest
+  `karma@^6.4.4`.
+- Suppress `GHSA-869p-cjfg-cm3x` by pulling the latest `jws@^3.2.3` and pinning the
+  `jsonwebtoken@^9.0.2` resolution.
+- Consolidate transitive `semver`, `qs`, `tough-cookie`, and `follow-redirects`
+  versions where possible, and pin the `getstream/axios@^1` resolution.
+- Clear the remaining `yarn npm audit --no-deprecations --all --recursive --environment production` findings.
+
+### Chore
+
+- Migrate package management to Yarn Berry (`yarn set version berry`, `packageManager: yarn@4.17.0`).
+- Upgrade to `typescript@^5`.
+- Upgrade the Jest toolchain to `^29` (`jest`, `babel-jest`, `ts-jest`, plus
+  `jest-environment-jsdom`) and add `@types/jest`.
+- Move `@types/emoji-mart`, `@types/url-parse`, and
+  `@types/webscopeio__react-textarea-autocomplete` to `devDependencies`.
+- Require modern Node (`engines.node: >=20`).
+- Use modern GitHub `actions/checkout@v4` and `actions/cache@v4` in CI workflows.
+- ESLint clean-up across the project.
+
 ## 1.4.0 - 2022-03-11
 
 ### Feature
