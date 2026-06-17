@@ -66,7 +66,7 @@ type StatefulComponentProps<T> = {
   initialValue: T;
 };
 
-export const StatefulComponent = <T extends unknown>({ children, initialValue }: StatefulComponentProps<T>) => {
+export const StatefulComponent = <T,>({ children, initialValue }: StatefulComponentProps<T>) => {
   const [state, setState] = useState<T>(initialValue);
 
   return children({ state, setState });

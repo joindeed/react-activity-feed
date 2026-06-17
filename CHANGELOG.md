@@ -7,9 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-Security-hardening and tooling-modernization work from the `securitize` branch. These
-changes clear the outstanding `yarn npm audit` findings and bring the build, CI, and
+Security-hardening, tooling-modernization, and dependency-modernization work from the
+`securitize` and `modernize` branches. These changes clear the outstanding `yarn npm
+audit` findings, add React 18 support, and bring the build, CI, dependencies, and
 toolchain up to date without changing the public component API.
+
+### Feature
+
+- Support React 18 while keeping 17/16.8 compatibility by widening the `react` and
+  `react-dom` peer-dependency ranges to `^18 || ^17 || ^16.8.0`.
 
 ### Fix
 
@@ -47,6 +53,32 @@ toolchain up to date without changing the public component API.
 - Require modern Node (`engines.node: >=20`).
 - Use modern GitHub `actions/checkout@v4` and `actions/cache@v4` in CI workflows.
 - ESLint clean-up across the project.
+- Modernize the ESLint toolchain: upgrade to `eslint@^8` with `@typescript-eslint@^8`,
+  replace the deprecated `babel-eslint`/`eslint-plugin-babel` with `@babel/eslint-parser`
+  and `@babel/eslint-plugin`, and bump the supporting plugins (`eslint-plugin-import`,
+  `-jest@^29`, `-jest-dom@^5`, `-mdx@^3`, `-prettier@^4`, `-promise@^7`,
+  `-react-hooks@^5`, `-sonarjs@^0.25`, `-typescript-sort-keys@^3`,
+  `eslint-config-prettier@^10`, `eslint-config-react-app@^7`).
+- Update `.eslintrc.json` for the new toolchain: switch the parser/plugin to `@babel`,
+  move `sonarjs/no-duplicate-string` to its object-option form, ignore the `sx` prop in
+  `react/no-unknown-property`, and disable `react/display-name` in test files.
+- Bump runtime dependencies (`getstream@^7.4.1`, `i18next@^20.6.1`,
+  `@webscopeio/react-textarea-autocomplete@^4.9.2`, `classnames@^2.5.1`,
+  `dayjs@^1.11.21`, `linkifyjs`/`linkify-plugin-mention@^4.3.3`,
+  `react-file-utils@^1.2.0`, `react-image-lightbox@^5.1.4`, `stream-analytics@^3.4.4`,
+  `tslib@^2.8.1`, `url-parse@^1.5.10`) and add an explicit `prop-types` dependency.
+- Upgrade `@types/node` to `^24`, bump `babel-plugin-i18next-extract` to `^0.10`, and
+  relax the remaining dev-dependency pins to caret-major ranges.
+- Add `resolutions` to consolidate transitive versions and remediate advisories: pin
+  `axios@^1`, `lodash`/`lodash-es@^4.18.1`, `@babel/core`, `@types/jest`, and
+  `@types/node`, and override the abandoned `request` with `postman-request`.
+- Speed up and stabilize the Jest run: disable Watchman and run `ts-jest` in
+  `isolatedModules` (transpile-only) mode, leaving type-checking to `tsc` (`yarn types`).
+- Refresh inline snapshots for the `react-file-utils` upgrade — the icon button now
+  renders a semantic `<button type="button">` with `aria-label`/`data-testid` instead of
+  a `<div role="button">`.
+- Reformat source and tests under the upgraded Prettier/ESLint (trailing commas in type
+  parameter lists, collapsed JSX expressions).
 
 ## 1.4.0 - 2022-03-11
 

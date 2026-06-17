@@ -25,7 +25,9 @@ export const InfiniteScrollPaginator = (props: InfiniteScrollPaginatorProps) => 
   const {
     children,
     hasNextPage,
-    Loader = DefaultLoadingIndicator,
+    // `react-file-utils@1.2.0`'s `LoadingIndicator` has typed (non-`UR`) props, so cast the
+    // default to the union `smartRender` accepts.
+    Loader = DefaultLoadingIndicator as unknown as ElementOrComponentOrLiteralType,
     loadNextPage,
     refreshing,
     reverse,

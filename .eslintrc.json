@@ -1,6 +1,6 @@
 {
   "root": true,
-  "plugins": ["babel", "sonarjs", "prettier", "react-hooks", "jest-dom", "jest"],
+  "plugins": ["@babel", "sonarjs", "prettier", "react-hooks", "jest-dom", "jest"],
   "extends": [
     "eslint:recommended",
     "plugin:prettier/recommended",
@@ -22,16 +22,17 @@
     "prefer-const": 1,
     "no-underscore-dangle": [2, { "allowAfterThis": true }],
     "object-shorthand": 1,
-    "babel/no-invalid-this": 2,
+    "@babel/no-invalid-this": 2,
     "array-callback-return": 2,
     "valid-typeof": 2,
     "arrow-body-style": 2,
     "require-await": 2,
     "react/prop-types": 0,
+    "react/no-unknown-property": ["error", { "ignore": ["sx"] }],
     "no-var": 2,
     "linebreak-style": [2, "unix"],
     "sonarjs/cognitive-complexity": ["error", 35],
-    "sonarjs/no-duplicate-string": ["error", 5],
+    "sonarjs/no-duplicate-string": ["error", { "threshold": 5 }],
     "semi": [1, "always"]
   },
   "env": {
@@ -39,7 +40,7 @@
     "node": true,
     "browser": true
   },
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": 2018,
@@ -93,6 +94,12 @@
         "react/react-in-jsx-scope": 0,
         "semi": 0,
         "no-undef": 0
+      }
+    },
+    {
+      "files": ["**/*.test.{js,jsx,ts,tsx}"],
+      "rules": {
+        "react/display-name": 0
       }
     }
   ],
