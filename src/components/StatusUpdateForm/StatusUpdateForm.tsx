@@ -74,7 +74,7 @@ export function StatusUpdateForm<
   CT extends UR = UR,
   RT extends UR = UR,
   CRT extends UR = UR,
-  PT extends UR = UR
+  PT extends UR = UR,
 >({
   feedGroup = 'user',
   activityVerb = 'post',

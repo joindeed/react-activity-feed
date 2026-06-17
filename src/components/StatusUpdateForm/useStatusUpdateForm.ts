@@ -368,7 +368,7 @@ export function useStatusUpdateForm<
   CT extends UR = UR,
   RT extends UR = UR,
   CRT extends UR = UR,
-  PT extends UR = UR
+  PT extends UR = UR,
 >({
   activityVerb,
   feedGroup,
@@ -392,16 +392,8 @@ export function useStatusUpdateForm<
 
   const { text, setText, insertText, onSelectEmoji, textInputRef } = useTextArea();
 
-  const {
-    resetOg,
-    setActiveOg,
-    ogActiveUrl,
-    activeOg,
-    dismissOg,
-    availableOg,
-    isOgScraping,
-    handleOgDebounced,
-  } = useOg({ client: client as StreamClient, logErr });
+  const { resetOg, setActiveOg, ogActiveUrl, activeOg, dismissOg, availableOg, isOgScraping, handleOgDebounced } =
+    useOg({ client: client as StreamClient, logErr });
 
   const {
     images,

@@ -69,14 +69,17 @@ export const Textarea = ({
 }: TextareaProps) => {
   const emoji = useMemo(() => emojiTrigger(emojiData), []);
 
+  // `ReactTextareaAutocomplete` is typed against its own bundled `@types/react`, whose instance
+  // type is incompatible with this project's `@types/react` JSX element type; cast to bridge them.
+  const RTA = ReactTextareaAutocomplete as unknown as React.ComponentType<Record<string, unknown>>;
+
   return (
-    <ReactTextareaAutocomplete
+    <RTA
       loadingComponent={LoadingIndicator}
-      // @ts-expect-error
       trigger={{ ...emoji, ...trigger }}
       innerRef={
         innerRef &&
-        ((el) => {
+        ((el: HTMLTextAreaElement) => {
           if (typeof innerRef === 'function') {
             innerRef(el);
           } else if (innerRef !== null) {

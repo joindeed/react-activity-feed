@@ -117,7 +117,7 @@ export async function dataTransferItemsToFiles(items?: DataTransferItemList) {
                   let res;
                   try {
                     res = await fetch(tag.src);
-                  } catch (e) {
+                  } catch {
                     return;
                   }
                   const contentType = res.headers.get('Content-type') || 'application/octet-stream';
@@ -174,7 +174,7 @@ export const trimURL = (url?: string) =>
 export type OnClickUserHandler<UT extends DefaultUT = DefaultUT> = (user: UserOrDefaultReturnType<UT>) => void;
 export const useOnClickUser = <
   UT extends DefaultUT = DefaultUT,
-  E extends HTMLElement | SVGGElement = HTMLImageElement | SVGSVGElement
+  E extends HTMLElement | SVGGElement = HTMLImageElement | SVGSVGElement,
 >(
   onClickUser?: OnClickUserHandler<UT>,
 ) =>

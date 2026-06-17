@@ -11,9 +11,7 @@ declare module 'linkifyjs' {
     isLink: boolean;
     t: string;
     toHref(scheme?: string): string;
-    toObject(
-      protocol?: string,
-    ): {
+    toObject(protocol?: string): {
       end: number;
       href: string;
       isLink: boolean;

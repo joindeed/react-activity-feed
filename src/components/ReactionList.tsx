@@ -36,7 +36,7 @@ export const ReactionList = <
   CT extends UR = UR,
   RT extends UR = UR,
   CRT extends UR = UR,
-  PT extends UR = UR
+  PT extends UR = UR,
 >({
   activityId,
   Reaction,
@@ -84,7 +84,7 @@ export const ReactionList = <
         reverse: reverseOrder,
         children: reactions.map((reaction) =>
           smartRender(Reaction, {
-            reaction: (reaction.toJS() as unknown) as EnrichedReaction<RT, CRT, UT>,
+            reaction: reaction.toJS() as unknown as EnrichedReaction<RT, CRT, UT>,
             key: reaction.get('id'),
           }),
         ),
