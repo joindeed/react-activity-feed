@@ -62,7 +62,7 @@ export type FeedManagerProps<
   analyticsClient: StreamAnalytics<UT> | null;
   client: StreamClient<UT, AT, CT, RT, CRT, PT>;
   errorHandler: ErrorHandler;
-  user?: StreamUser<UT>;
+  user?: StreamUser<UT, AT, CT, RT, CRT, PT>;
 };
 
 export type FeedManagerState<
