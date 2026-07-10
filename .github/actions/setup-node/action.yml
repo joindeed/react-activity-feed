@@ -13,6 +13,9 @@ runs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ inputs.node-version }}
+    - name: Enable Corepack
+      run: corepack enable
+      shell: bash
     - name: Cache Dependencies
       uses: actions/cache@v4
       with:
@@ -20,5 +23,5 @@ runs:
         key: ${{ runner.os }}-${{ inputs.node-version }}-modules-${{ hashFiles('**/yarn.lock') }}
         restore-keys: ${{ runner.os }}-${{ inputs.node-version }}-modules-
     - name: Install Dependencies & Build
-      run: yarn install --frozen-lockfile --ignore-engines
+      run: yarn install --immutable
       shell: bash
