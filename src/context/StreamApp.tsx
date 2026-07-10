@@ -53,7 +53,7 @@ export type StreamContextValue<
   client: null | StreamClient<UT, AT, CT, RT, CRT, PT>;
   errorHandler: ErrorHandler;
   sharedFeedManagers: SharedFeedManagers<UT, AT, CT, RT, CRT, PT>;
-  user?: StreamUser<UT>;
+  user?: StreamUser<UT, AT, CT, RT, CRT, PT>;
   userData?: UT;
 };
 
