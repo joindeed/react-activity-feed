@@ -43,7 +43,7 @@ type ResponseResult<
   AT extends DefaultAT = DefaultAT,
   CT extends UR = UR,
   RT extends UR = UR,
-  CRT extends UR = UR
+  CRT extends UR = UR,
 > =
   | FlatActivityEnriched<UT, AT, CT, RT, CRT>
   | AggregatedActivityEnriched<UT, AT, CT, RT, CRT>
@@ -57,7 +57,7 @@ export type FeedManagerProps<
   CT extends UR = UR,
   RT extends UR = UR,
   CRT extends UR = UR,
-  PT extends UR = UR
+  PT extends UR = UR,
 > = FeedProps<UT, AT, CT, RT, CRT, PT> & {
   analyticsClient: StreamAnalytics<UT> | null;
   client: StreamClient<UT, AT, CT, RT, CRT, PT>;
@@ -70,7 +70,7 @@ export type FeedManagerState<
   AT extends DefaultAT = DefaultAT,
   CT extends UR = UR,
   RT extends UR = UR,
-  CRT extends UR = UR
+  CRT extends UR = UR,
 > = {
   activities: immutable.Map<string, immutable.Record<ResponseResult<UT, AT, CT, RT, CRT>>>;
   activityIdToPath: Record<string, Array<string | number>>;
@@ -101,7 +101,7 @@ export class FeedManager<
   CT extends UR = UR,
   RT extends UR = UR,
   CRT extends UR = UR,
-  PT extends UR = UR
+  PT extends UR = UR,
 > {
   registeredCallbacks: Array<UpdateTriggeredCallback>;
 
@@ -303,17 +303,17 @@ export class FeedManager<
           )
           .updateIn(
             [...path, 'own_reactions', kind],
-            typedUpdater<immutable.List<CU>>(
-              (v) => v.remove(v.findIndex((r: CU) => r.get('id') === id)),
-              immutable.List<CU>(),
-            ),
+            typedUpdater<immutable.List<CU>>((v) => {
+              const idx = v.findIndex((r: CU) => r.get('id') === id);
+              return idx >= 0 ? v.remove(idx) : v;
+            }, immutable.List<CU>()),
           )
           .updateIn(
             [...path, 'latest_reactions', kind],
-            typedUpdater<immutable.List<CU>>(
-              (v) => v.remove(v.findIndex((r: CU) => r.get('id') === id)),
-              immutable.List<CU>(),
-            ),
+            typedUpdater<immutable.List<CU>>((v) => {
+              const idx = v.findIndex((r: CU) => r.get('id') === id);
+              return idx >= 0 ? v.remove(idx) : v;
+            }, immutable.List<CU>()),
           );
 
         this.addFoundReactionIdPaths(getInToJS<EnrichedReaction>(activities, path), reactionIdToPaths, path);
@@ -438,17 +438,17 @@ export class FeedManager<
           )
           .updateIn(
             [...path, 'own_children', kind],
-            typedUpdater<immutable.List<CU>>(
-              (v) => v.remove(v.findIndex((r: CU) => r.get('id') === id)),
-              immutable.List<CU>(),
-            ),
+            typedUpdater<immutable.List<CU>>((v) => {
+              const idx = v.findIndex((r: CU) => r.get('id') === id);
+              return idx >= 0 ? v.remove(idx) : v;
+            }, immutable.List<CU>()),
           )
           .updateIn(
             [...path, 'latest_children', kind],
-            typedUpdater<immutable.List<CU>>(
-              (v) => v.remove(v.findIndex((r: CU) => r.get('id') === id)),
-              immutable.List<CU>(),
-            ),
+            typedUpdater<immutable.List<CU>>((v) => {
+              const idx = v.findIndex((r: CU) => r.get('id') === id);
+              return idx >= 0 ? v.remove(idx) : v;
+            }, immutable.List<CU>()),
           );
       }
 

@@ -1,6 +1,10 @@
 module.exports = function (config) {
   config.set({
     frameworks: ['mocha'],
+    // Ubuntu 24.04 AppArmor blocks Chromium's unprivileged user namespaces,
+    // so the sandbox cannot start in CI. --no-sandbox is safe here because
+    // the browser only loads our own test bundle, not untrusted content.
+    // See https://chromium.googlesource.com/chromium/src/+/main/docs/linux/sandboxing.md
     browsers: ['ChromiumHeadlessNoSandbox'],
     customLaunchers: {
       ChromiumHeadlessNoSandbox: {
