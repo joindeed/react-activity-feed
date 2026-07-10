@@ -1,7 +1,13 @@
 module.exports = function (config) {
   config.set({
     frameworks: ['mocha'],
-    browsers: ['ChromiumHeadless'],
+    browsers: ['ChromiumHeadlessNoSandbox'],
+    customLaunchers: {
+      ChromiumHeadlessNoSandbox: {
+        base: 'ChromiumHeadless',
+        flags: ['--no-sandbox'],
+      },
+    },
     files: [
       '../node_modules/chai/chai.js',
       '../node_modules/react/umd/react.development.js',
