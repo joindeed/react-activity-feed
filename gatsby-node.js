@@ -13,9 +13,8 @@
 // Some newer transitive deps ship ESM-first or modern CJS that webpack v4's
 // acorn parser can't handle. We pin those to older CJS-compatible versions
 // via package.json resolutions.
-const path = require('path');
 
-exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
+exports.onCreateWebpackConfig = ({ actions, getConfig }) => {
   const config = getConfig();
 
   if (config.resolve) {
