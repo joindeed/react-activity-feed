@@ -19,6 +19,8 @@ jobs:
           node-version: ${{ matrix.node }}
       - name: Test unit
         run: yarn test
+      - name: Build
+        run: yarn build
       - name: Validate Browser Bundle
         run: yarn run test-browser-build
       - name: Validate translation
