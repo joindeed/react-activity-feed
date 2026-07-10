@@ -6,7 +6,6 @@
     "plugin:prettier/recommended",
     "plugin:react/recommended",
     "plugin:sonarjs/recommended",
-    "plugin:mdx/recommended",
     "plugin:jest/recommended",
     "plugin:jest-dom/recommended"
   ],
@@ -84,16 +83,6 @@
           { "caseSensitive": false, "natural": true, "requiredFirst": true }
         ],
         "typescript-sort-keys/string-enum": ["error", "asc", { "caseSensitive": false, "natural": true }]
-      }
-    },
-    {
-      "files": ["*.md", "*.mdx"],
-      "extends": ["plugin:mdx/overrides"],
-      "rules": {
-        "react/jsx-no-undef": 0,
-        "react/react-in-jsx-scope": 0,
-        "semi": 0,
-        "no-undef": 0
       }
     },
     {

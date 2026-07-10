@@ -2,7 +2,7 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 import moment from 'moment';
 
-import { notificationGroup1, notificationGroup2 } from './docz';
+import { notificationGroup1, notificationGroup2 } from './testUtils';
 import { Notification } from './Notification';
 import { TranslationProvider } from '../context/TranslationContext';
 
