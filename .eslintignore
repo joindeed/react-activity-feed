@@ -3,9 +3,7 @@ node_modules/
 /example/build/
 /lib/
 /dist/
-/docs/
 /.git/
 **/*.sh
 vendor/
 *.md
-.docz

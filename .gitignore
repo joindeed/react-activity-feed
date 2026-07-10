@@ -8,7 +8,6 @@ node_modules
 /example/build
 dist
 lib
-.docz
 
 # misc
 .DS_Store

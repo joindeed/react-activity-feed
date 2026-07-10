@@ -1,13 +1,10 @@
 import React, { FC, useState } from 'react';
+
 import { StreamApp } from '../context';
 import { NotificationProps } from './Notification';
 
 export const WithExampleStreamApp: FC = ({ children }) => (
-  <StreamApp
-    apiKey="fpwesm5u2evu"
-    appId="64527"
-    token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZXhhbXBsZS11c2VyIn0.cM6zFlcQ68qP2LLz-Y6fPeNglfOuwB2aeBUaQild1wg"
-  >
+  <StreamApp apiKey="fpwesm5u2evu" appId="64527" token="__VG_JWT_TOKEN_6dd1276ec54b__">
     {children}
   </StreamApp>
 );
@@ -15,7 +12,6 @@ export const WithExampleStreamApp: FC = ({ children }) => (
 export const notificationGroup1: NotificationProps['activityGroup'] = {
   activities: [
     {
-      // @ts-expect-error
       actor: { data: { name: 'Jacky Davidson', profileImage: 'https://randomuser.me/api/portraits/men/72.jpg' } },
       verb: 'like',
       object: {
@@ -38,20 +34,17 @@ export const notificationGroup1: NotificationProps['activityGroup'] = {
 export const notificationGroup2: NotificationProps['activityGroup'] = {
   activities: [
     {
-      // @ts-expect-error
       actor: { data: { name: 'Jordan Belfair', profileImage: 'https://randomuser.me/api/portraits/women/72.jpg' } },
       verb: 'follow',
       object: {},
       time: '2021-04-11T07:40:37.975Z',
     },
     {
-      // @ts-expect-error
       actor: { data: { name: 'Jacky Davidson', profileImage: 'https://randomuser.me/api/portraits/men/72.jpg' } },
       verb: 'follow',
       object: {},
     },
     {
-      // @ts-expect-error
       actor: { data: { name: 'Jared Fault', profileImage: 'https://randomuser.me/api/portraits/women/7.jpg' } },
       verb: 'follow',
       object: {},
