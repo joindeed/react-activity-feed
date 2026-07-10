@@ -12,6 +12,7 @@ export const WithExampleStreamApp: FC = ({ children }) => (
 export const notificationGroup1: NotificationProps['activityGroup'] = {
   activities: [
     {
+      // @ts-ignore
       actor: { data: { name: 'Jacky Davidson', profileImage: 'https://randomuser.me/api/portraits/men/72.jpg' } },
       verb: 'like',
       object: {
@@ -34,17 +35,20 @@ export const notificationGroup1: NotificationProps['activityGroup'] = {
 export const notificationGroup2: NotificationProps['activityGroup'] = {
   activities: [
     {
+      // @ts-ignore
       actor: { data: { name: 'Jordan Belfair', profileImage: 'https://randomuser.me/api/portraits/women/72.jpg' } },
       verb: 'follow',
       object: {},
       time: '2021-04-11T07:40:37.975Z',
     },
     {
+      // @ts-ignore
       actor: { data: { name: 'Jacky Davidson', profileImage: 'https://randomuser.me/api/portraits/men/72.jpg' } },
       verb: 'follow',
       object: {},
     },
     {
+      // @ts-ignore
       actor: { data: { name: 'Jared Fault', profileImage: 'https://randomuser.me/api/portraits/women/7.jpg' } },
       verb: 'follow',
       object: {},
