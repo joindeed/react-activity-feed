@@ -15,8 +15,8 @@ export function getInAs<T>(source: AnyCollection, keyPath: Iterable<unknown>, no
 }
 
 /** Typed wrapper over `Collection.getIn(...).toJS()`, returning the plain-JS value as `T`. */
-export function getInToJS<T>(source: AnyCollection, keyPath: Iterable<unknown>, notSetValue?: unknown): T {
-  return (getInAs<AnyCollection>(source, keyPath, notSetValue).toJS() as unknown) as T;
+export function getInToJS<T>(source: AnyCollection, keyPath: Iterable<unknown>, notSetValue?: AnyCollection): T {
+  return getInAs<AnyCollection>(source, keyPath, notSetValue).toJS() as unknown as T;
 }
 
 /**
@@ -25,10 +25,10 @@ export function getInToJS<T>(source: AnyCollection, keyPath: Iterable<unknown>, 
  * semantics: it is applied when the existing value is `null`/`undefined`.
  */
 export function typedUpdater<T>(updater: (value: T) => T, notSetValue: T): (value: unknown) => unknown {
-  return (value) => updater((value ?? notSetValue) as T);
+  return (value) => updater((value === undefined ? notSetValue : value) as T);
 }
 
 /** Typed wrapper over `fromJS`, whose inferred type does not match our Record/Map shapes. */
 export function fromJSAs<T>(jsValue: unknown): T {
-  return (immutable.fromJS(jsValue) as unknown) as T;
+  return immutable.fromJS(jsValue) as unknown as T;
 }
