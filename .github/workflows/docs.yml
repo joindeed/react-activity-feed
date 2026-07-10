@@ -22,5 +22,7 @@ jobs:
           path: ./.docz
           key: docz-${{ matrix.node }}-gatsby-v1-${{ github.run_id }}
           restore-keys: docz-${{ matrix.node }}-gatsby-v1-
+      - name: Build
+        run: yarn build
       - name: Build Docs
         run: yarn run docs-build
