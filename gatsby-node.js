@@ -7,7 +7,12 @@
 // Webpack v4 also doesn't know about Node 20's built-in modules, so we
 // provide empty fallbacks for server-only modules that browser bundles
 // should never actually import.
-exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
+//
+// Some newer transitive deps ship ESM-first or modern CJS that webpack v4's
+// acorn parser can't handle. We pin those to older CJS-compatible versions
+// via package.json resolutions.
+
+exports.onCreateWebpackConfig = ({ actions, getConfig }) => {
   const config = getConfig();
 
   if (config.resolve) {
@@ -20,6 +25,10 @@ exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
     net: 'empty',
     fs: 'empty',
     child_process: 'empty',
+    // assert pulls in object.assign/polyfill via a subpath require that
+    // webpack v4's resolver can't resolve for packages without an exports
+    // field. Mock it since assert is only used in dev/test code paths.
+    assert: 'empty',
   };
 
   actions.replaceWebpackConfig(config);
